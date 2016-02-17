@@ -37,7 +37,8 @@
             android:id="@+id/green_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="24dp"/>
+            android:padding="24dp"
+            android:drawable="@android:color/holo_green_light" />
 
         <Button
             android:id="@+id/red_button"
