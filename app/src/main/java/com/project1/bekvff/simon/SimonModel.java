@@ -11,6 +11,8 @@ import java.util.Random;
 public class SimonModel {
 
     private List list;
+    private int mCurrentScore;
+    private int mHighScore;
 
     //Constructor creates a new Linked List
     public SimonModel() {
@@ -30,6 +32,7 @@ public class SimonModel {
     public void createNewList() {
         list = new ArrayList();
         createNewSequenceButton(0);
+        setCurrentScore(0);
     }
 
 
@@ -65,6 +68,25 @@ public class SimonModel {
                 break;
         }
         return color;
+    }
+
+    public int getCurrentScore() {
+        return mCurrentScore;
+    }
+
+    public void setCurrentScore(int currentScore) {
+        mCurrentScore = currentScore;
+    }
+
+    public void increaseScores() {
+        mCurrentScore++;
+        if(mCurrentScore > mHighScore) {
+            mHighScore = mCurrentScore;
+        }
+    }
+
+    public int getHighScore() {
+        return mHighScore;
     }
 }
 

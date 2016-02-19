@@ -2,6 +2,7 @@ package com.project1.bekvff.simon;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -44,22 +45,13 @@ public class SimonActivity extends AppCompatActivity {
     //This function updates the score view to the TextView of both
     //current score and high score
     private void updateScoreView() {
-        mCurrentScoreView.setText(String.valueOf(currentScore));
-        mHighScoreView.setText(String.valueOf(highScore));
-    }
-
-    //This function increases the current and high score appropriately
-    private void increaseScore() {
-        currentScore++;
-        if(currentScore > highScore) {
-            highScore = currentScore;
-        }
+        mCurrentScoreView.setText(String.valueOf(model.getCurrentScore()));
+        mHighScoreView.setText(String.valueOf(model.getHighScore()));
     }
 
     //This function will be called when the Start button is clicked
     //and will reset the LinkedList and current score
-    private void startReset() {
-        currentScore = 0;
+    public void startResetClicked(View v) {
         model.createNewList();
 
     }

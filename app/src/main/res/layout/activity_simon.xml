@@ -77,6 +77,7 @@ design -->
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/start_reset"
+        android:onClick="startResetClicked"
         android:layout_marginTop="30dp"/>
 
 </LinearLayout>
