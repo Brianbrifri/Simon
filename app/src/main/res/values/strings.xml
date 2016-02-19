@@ -1,3 +1,4 @@
+<!-- Resource file for strings -->
 <resources>
     <string name="app_name">Simon</string>
     <string name="your_high_score_is">Your High Score is:</string>
