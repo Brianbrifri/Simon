@@ -1,5 +1,6 @@
 package com.project1.bekvff.simon;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -27,7 +28,7 @@ public class SimonModel {
     //This function creates a new linked list and initializes the
     //first element with a new Sequence Button
     public void createNewList() {
-        list = new LinkedList();
+        list = new ArrayList();
         createNewSequenceButton(0);
     }
 

@@ -40,13 +40,14 @@ design -->
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="24dp"
-            android:drawable="@android:color/holo_green_light" />
+            android:background="#26ca28"/>
 
         <Button
             android:id="@+id/red_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="24dp"/>
+            android:padding="24dp"
+            android:background="#cb2f2f"/>
 
     </LinearLayout>
 
@@ -59,13 +60,15 @@ design -->
             android:id="@+id/yellow_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="24dp"/>
+            android:padding="24dp"
+            android:background="#f0e10c"/>
 
         <Button
             android:id="@+id/blue_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="24dp"/>
+            android:padding="24dp"
+            android:background="#3158f5"/>
 
     </LinearLayout>
 
@@ -73,6 +76,7 @@ design -->
         android:id="@+id/start_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/start_reset"
         android:layout_marginTop="30dp"/>
 
 </LinearLayout>
