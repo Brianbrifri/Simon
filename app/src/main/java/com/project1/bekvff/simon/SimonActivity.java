@@ -1,6 +1,5 @@
 package com.project1.bekvff.simon;
 
-import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -8,7 +7,8 @@ import android.widget.TextView;
 
 public class SimonActivity extends AppCompatActivity {
 
-    //Initialize buttons and views
+    //Initialize buttons, model and views
+    private SimonModel model;
     private Button mGreenButton;
     private Button mRedButton;
     private Button mYellowButton;
@@ -26,12 +26,14 @@ public class SimonActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simon);
 
-        //Wire up buttons and views
+        //Wire up buttons, model and views
         mGreenButton = (Button) findViewById(R.id.green_button);
         mRedButton = (Button) findViewById(R.id.red_button);
         mYellowButton = (Button) findViewById(R.id.yellow_button);
         mBlueButton = (Button) findViewById(R.id.blue_button);
         mStartButton = (Button) findViewById(R.id.start_button);
+
+        model = new SimonModel();
 
         mCurrentScoreView = (TextView) findViewById(R.id.current_score_view);
         mHighScoreView = (TextView) findViewById(R.id.high_score_view);
@@ -58,5 +60,7 @@ public class SimonActivity extends AppCompatActivity {
     //and will reset the LinkedList and current score
     private void startReset() {
         currentScore = 0;
+        model.createNewList();
+
     }
 }
