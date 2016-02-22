@@ -19,6 +19,11 @@ public class SimonModel {
         createNewList();
     }
 
+    //Function returns list itself
+    public List getList() {
+        return list;
+    }
+
     //This function returns a Sequence Button at the specified index
     public SequenceButton getSequenceButtonAtIndex(int index) {
         SequenceButton sequenceButtonAtIndex;

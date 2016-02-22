@@ -3,4 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorGreen">#2aa22a</color>
+    <color name="colorGreenFlash">#85e085</color>
+    <color name="colorRed">#cc0000</color>
+    <color name="colorRedFlash">#ff6666</color>
+    <color name="colorYellow">#cccc00</color>
+    <color name="colorYellowFlash">#ffff66</color>
+    <color name="colorBlue">#0052cc</color>
+    <color name="colorBlueFlash">#66a3ff</color>
 </resources>
