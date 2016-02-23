@@ -63,14 +63,18 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     public void listenerMethod() {
         Log.d("TAG", "Listener method was called");
         for (int i = 0; i < 4; i++) {
+            Animator animator;
 
             final Button view;
             if (i == 0) {
-                Animator animator = AnimatorInflater.loadAnimator(this, R.animator.change_green_color);
+                animator = AnimatorInflater.loadAnimator(this, R.animator.change_green_color);
                 animator.setStartDelay(i * 50);
                 animator.setTarget(mGreenButton);
                 view = mGreenButton;
             }
+
+
+
         }
     }
 }
