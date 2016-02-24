@@ -12,11 +12,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SimonActivity extends AppCompatActivity implements MainFragment.MainFragmentListener{
 
     //Initialize buttons, model and views
     private static final String MAIN_FRAG_TAG = "MainFragment";
+    private static final String KEY_INDEX = "index";
+    private static final String KEY_CURRENT = "current";
+    private static final String KEY_HIGH = "high";
     private MainFragment mMainFragment;
     private SimonModel model;
     private Button mGreenButton;
@@ -27,14 +31,29 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     private TextView mCurrentScoreView;
     private TextView mHighScoreView;
 
-    private int mCurrentScore = 0;
-    private int mHighScore = 0;
+    private int mCurrentScore;
+    private int mHighScore ;
     private int mCurrentIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simon);
+        //Set member variables to 0
+        mHighScore = 0;
+        mCurrentScore = 0;
+        mCurrentIndex = 0;
+
+        //This is where I set the member variables if the activity has been destroyed
+        //Also set the views and updated the view
+        if (savedInstanceState != null) {
+            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            mHighScore = savedInstanceState.getInt(KEY_HIGH, 0);
+            mCurrentScore = savedInstanceState.getInt(KEY_CURRENT, 0);
+            mCurrentScoreView = (TextView) findViewById(R.id.current_score_view);
+            mHighScoreView = (TextView) findViewById(R.id.high_score_view);
+            updateScoreView();
+        }
 
         //Wire up buttons, model and views
         mGreenButton = (Button) findViewById(R.id.green_button);
@@ -48,6 +67,9 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
         mCurrentScoreView = (TextView) findViewById(R.id.current_score_view);
         mHighScoreView = (TextView) findViewById(R.id.high_score_view);
 
+        //Creating the fragment manager and attaching the fragment (found by tag) to the
+        //fragment manager. If the mainFragment is not already created, the mainFragment
+        //variable is newed up, the transaction is started, and committed
         FragmentManager fragmentManager = getFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag(MAIN_FRAG_TAG);
         mMainFragment = (MainFragment) fragmentManager.findFragmentByTag(MAIN_FRAG_TAG);
@@ -62,54 +84,100 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
         updateScoreView();
     }
 
+    //This is where the member variables are stored to final strings
+    //if the activity is destroyed
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_INDEX, mCurrentIndex);
+        outState.putInt(KEY_CURRENT, mCurrentScore);
+        outState.putInt(KEY_HIGH, mHighScore);
+    }
+
     //This function updates the score view to the TextView of both
     //current score and high score
     public void updateScoreView() {
-        mCurrentScoreView.setText(String.valueOf(model.getCurrentScore()));
-        mHighScoreView.setText(String.valueOf(model.getHighScore()));
+        mCurrentScoreView.setText(String.valueOf(mCurrentScore));
+        mHighScoreView.setText(String.valueOf(mHighScore));
     }
 
     //For the 4 color buttons, when they are clicked, it is first checked
     //to see if the background fragment is running, so as not to call the
-    //checkButtonPress function if it is; otherwise, call the checkButtonPress functions
-    //and call updateScoreView to keep view up to date
+    //checkButtonPress function if it is; otherwise, call the checkButtonPress function
     public void greenButtonClicked(View v) {
         if(mMainFragment.fragmentIsRunning()) {
             return;
         }
-        model.checkButtonPress(R.id.green_button);
-        updateScoreView();
+        checkButtonPress(R.id.green_button);
     }
 
     public void redButtonClicked(View v) {
         if(mMainFragment.fragmentIsRunning()) {
             return;
         }
-        model.checkButtonPress(R.id.red_button);
-        updateScoreView();
+        checkButtonPress(R.id.red_button);
     }
 
     public void yellowButtonClicked(View v) {
         if(mMainFragment.fragmentIsRunning()) {
             return;
         }
-        model.checkButtonPress(R.id.yellow_button);
-        updateScoreView();
+        checkButtonPress(R.id.yellow_button);
     }
 
     public void blueButtonClicked(View v) {
         if(mMainFragment.fragmentIsRunning()) {
             return;
         }
-        model.checkButtonPress(R.id.blue_button);
-        updateScoreView();
+        checkButtonPress(R.id.blue_button);
     }
 
     //This function will be called when the Start button is clicked
     //and will reset the Array list and current score
     public void startResetClicked(View v) {
         model.createNewList();
+        mCurrentScore = 0;
         updateScoreView();
+    }
+
+    //This function will increment the current score by one as well as the
+    //high score if the current score is greater
+    private void increaseScores() {
+        mCurrentScore++;
+        if(mCurrentScore > mHighScore) {
+            mHighScore = mCurrentScore;
+        }
+    }
+
+    //This function increments the index by 1. If it reaches the end of the array list,
+    //it sets the index back to 0, increases the score (because you have pressed all
+    //buttons correctly), updates the score view, and adds a new button to the sequence
+    private void incrementIndex() {
+        mCurrentIndex++;
+        if(mCurrentIndex >= model.getListSize()) {
+            mCurrentIndex = 0;
+            increaseScores();
+            updateScoreView();
+            model.createNewSequenceButton();
+        }
+    }
+
+    //This function is called when a button is clicked. The resId of the button
+    //is passed through and checked against the sequence at the current index.
+    //If it is correct, the index is incremented; otherwise, a new list is created,
+    //index and current score are reset, score view is updated, and a toast is displayed
+    public void checkButtonPress(int resIdOfButtonPressed) {
+        SequenceButton button = model.getSequenceButtonAtIndex(mCurrentIndex);
+        if(resIdOfButtonPressed == button.getTextResId()) {
+            incrementIndex();
+        }
+        else {
+            model.createNewList();
+            mCurrentIndex = 0;
+            mCurrentScore = 0;
+            updateScoreView();
+            Toast.makeText(this, R.string.fail_toast, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void animateColorChangeForButton(final Button button, int colorFrom, int colorTo) {
