@@ -34,6 +34,10 @@ public class MainFragment extends Fragment {
         }
     }
 
+    public boolean fragmentIsRunning() {
+        return isRunning;
+    }
+
     //Function to remove callbacks whenever the fragment stops running
     @Override
     public void onStop() {

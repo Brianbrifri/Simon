@@ -42,6 +42,7 @@ design -->
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="24dp"
+            android:onClick="greenButtonClicked"
             android:background="#26ca28"/>
 
         <Button
@@ -49,6 +50,7 @@ design -->
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="24dp"
+            android:onClick="redButtonClicked"
             android:background="#cb2f2f"/>
 
     </LinearLayout>
@@ -63,6 +65,7 @@ design -->
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="24dp"
+            android:onClick="yellowButtonClicked"
             android:background="#f0e10c"/>
 
         <Button
@@ -70,6 +73,7 @@ design -->
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="24dp"
+            android:onClick="blueButtonClicked"
             android:background="#3158f5"/>
 
     </LinearLayout>
