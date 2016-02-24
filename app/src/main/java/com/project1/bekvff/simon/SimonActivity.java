@@ -106,6 +106,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     //checkButtonPress function if it is; otherwise, call the checkButtonPress function
     public void greenButtonClicked(View v) {
         if(mMainFragment.fragmentIsRunning()) {
+            Log.d("TAG", "Button short circuited");
             return;
         }
         checkButtonPress(R.id.green_button);
@@ -113,6 +114,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
 
     public void redButtonClicked(View v) {
         if(mMainFragment.fragmentIsRunning()) {
+            Log.d("TAG", "Button short circuited");
             return;
         }
         checkButtonPress(R.id.red_button);
@@ -120,6 +122,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
 
     public void yellowButtonClicked(View v) {
         if(mMainFragment.fragmentIsRunning()) {
+            Log.d("TAG", "Button short circuited");
             return;
         }
         checkButtonPress(R.id.yellow_button);
@@ -127,6 +130,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
 
     public void blueButtonClicked(View v) {
         if(mMainFragment.fragmentIsRunning()) {
+            Log.d("TAG", "Button short circuited");
             return;
         }
         checkButtonPress(R.id.blue_button);
@@ -189,13 +193,13 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
                 button.setBackgroundColor((int) animation.getAnimatedValue());
             }
         });
+        colorAnimation.start();
+        colorAnimation.reverse();
     }
 
     @Override
     public void listenerMethod() {
         Log.d("TAG", "Listener method was called");
-        for (int i = 0; i < 4; i++) {
 
-        }
     }
 }
