@@ -67,7 +67,9 @@ public class MainFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         Log.d("TAG", "onDestroy called");
-        mHandler.removeCallbacks(runnable);
+        if(mHandler != null) {
+            mHandler.removeCallbacks(runnable);
+        }
     }
 
     public void startSequence() {

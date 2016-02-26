@@ -6,6 +6,8 @@ import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.pm.ActivityInfo;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,6 +41,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simon);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //Set member variables to 0
         mHighScore = 0;
         mCurrentScore = 0;
@@ -62,6 +65,12 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
         mBlueButton = (Button) findViewById(R.id.blue_button);
         mStartButton = (Button) findViewById(R.id.start_button);
 
+        //Set button background colors. Will be relegated to drawables shortly
+        mGreenButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorGreen));
+        mRedButton.setBackgroundColor(getResources().getColor(R.color.colorRed));
+        mYellowButton.setBackgroundColor(getResources().getColor(R.color.colorYellow));
+        mBlueButton.setBackgroundColor(getResources().getColor(R.color.colorBlue));
+
         model = new SimonModel();
 
         mCurrentScoreView = (TextView) findViewById(R.id.current_score_view);
@@ -82,6 +91,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
 
         //Display the initial scores (both are zero at this point)
         updateScoreView();
+//        mMainFragment.startSequence();
     }
 
     //This is where the member variables are stored to final strings
@@ -135,9 +145,14 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     //This function will be called when the Start button is clicked
     //and will reset the Array list and current score
     public void startResetClicked(View v) {
-        model.createNewList();
-        mCurrentScore = 0;
-        updateScoreView();
+        if(mMainFragment.fragmentIsRunning()) {
+            mMainFragment.stopSequence();
+        }
+        else {
+            model.createNewList();
+            mCurrentScore = 0;
+            updateScoreView();
+        }
     }
 
     //This function will increment the current score by one as well as the
@@ -159,6 +174,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
             increaseScores();
             updateScoreView();
             model.createNewSequenceButton();
+            mMainFragment.startSequence();
         }
     }
 
@@ -177,25 +193,47 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
             mCurrentScore = 0;
             updateScoreView();
             Toast.makeText(this, R.string.fail_toast, Toast.LENGTH_SHORT).show();
+            mMainFragment.startSequence();
         }
     }
 
-    private void animateColorChangeForButton(final Button button, int colorFrom, int colorTo) {
+    private void animateColorChangeForButton(final Button button, int colorFrom, int colorTo, int delay) {
         ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-        colorAnimation.setDuration(250);
+        colorAnimation.setDuration(1000);
         colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 button.setBackgroundColor((int) animation.getAnimatedValue());
             }
         });
+        colorAnimation.setStartDelay(delay);
+        colorAnimation.start();
+        colorAnimation.reverse();
     }
 
     @Override
     public void listenerMethod() {
         Log.d("TAG", "Listener method was called");
-        for (int i = 0; i < 4; i++) {
-
+        int delay = 2000;
+        int index;
+        for(index = 0; index < model.getListSize(); index++) {
+            SequenceButton button = model.getSequenceButtonAtIndex(index);
+            switch(button.getTextResId()) {
+                case R.id.green_button:
+                    animateColorChangeForButton(mGreenButton, getResources().getColor(R.color.colorGreen), getResources().getColor(R.color.colorGreenFlash), delay * index);
+                    break;
+                case R.id.red_button:
+                    animateColorChangeForButton(mRedButton, getResources().getColor(R.color.colorRed), getResources().getColor(R.color.colorRedFlash), delay * index);
+                    break;
+                case R.id.yellow_button:
+                    animateColorChangeForButton(mYellowButton, getResources().getColor(R.color.colorYellow), getResources().getColor(R.color.colorYellowFlash), delay * index);
+                    break;
+                case R.id.blue_button:
+                    animateColorChangeForButton(mBlueButton, getResources().getColor(R.color.colorBlue), getResources().getColor(R.color.colorBlueFlash), delay * index);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
