@@ -142,16 +142,19 @@ public class MainFragment extends Fragment {
             mHandler = new Handler();
 //            mHandler.postDelayed(runnable, 1000);
             for(i = 0; i < model.getListSize(); i++) {
+                Log.d("TAG", "IsRunning is: " +isRunning);
                 isRunning = true;
                 final int finalI = i;
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         mListener.listenerMethod(model.getSequenceButtonAtIndex(finalI).getTextResId());
+                        Log.d("TAG", "FinalI is: " +finalI);
                     }
                 }, i * 1000);
             }
             isRunning = false;
+            Log.d("TAG", "IsRunning is: " +isRunning);
         }
     }
 

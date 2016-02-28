@@ -2,9 +2,11 @@ package com.project1.bekvff.simon;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -64,12 +66,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
         mStartButton = (Button) findViewById(R.id.start_button);
 
         //Set button background colors. Will be relegated to drawables shortly
-   //     mGreenButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorGreen));
-        mRedButton.setBackgroundColor(getResources().getColor(R.color.colorRed));
-        mYellowButton.setBackgroundColor(getResources().getColor(R.color.colorYellow));
-        mBlueButton.setBackgroundColor(getResources().getColor(R.color.colorBlue));
 
-//        model = new SimonModel();
 
         mCurrentScoreView = (TextView) findViewById(R.id.current_score_view);
         mHighScoreView = (TextView) findViewById(R.id.high_score_view);
@@ -157,7 +154,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
 
     private void animateColorChangeForButton(final Button button, int colorFrom, int colorTo) {
         ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-        colorAnimation.setDuration(1000);
+        colorAnimation.setDuration(500);
         colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -168,21 +165,30 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
         colorAnimation.reverse();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void listenerMethod(int textResId) {
         Log.d("TAG", "Listener method was called");
         switch(textResId) {
             case R.id.green_button:
-                animateColorChangeForButton(mGreenButton, getResources().getColor(R.color.colorGreen), getResources().getColor(R.color.colorGreenFlash));
+                animateColorChangeForButton(mGreenButton, ContextCompat.getColor(this, R.color.colorGreen), getResources().getColor(R.color.colorGreenFlash));
+                Log.d("TAG", "Green button animated");
+                mGreenButton.setBackground(getDrawable(R.drawable.green_selector));
                 break;
             case R.id.red_button:
-                animateColorChangeForButton(mRedButton, getResources().getColor(R.color.colorRed), getResources().getColor(R.color.colorRedFlash));
+                animateColorChangeForButton(mRedButton, ContextCompat.getColor(this, R.color.colorRed), getResources().getColor(R.color.colorRedFlash));
+                Log.d("TAG", "Red button animated");
+                mRedButton.setBackground(getDrawable(R.drawable.red_selector));
                 break;
             case R.id.yellow_button:
-                animateColorChangeForButton(mYellowButton, getResources().getColor(R.color.colorYellow), getResources().getColor(R.color.colorYellowFlash));
+                animateColorChangeForButton(mYellowButton, ContextCompat.getColor(this, R.color.colorYellow), getResources().getColor(R.color.colorYellowFlash));
+                Log.d("TAG", "Yellow button animated");
+                mYellowButton.setBackground(getDrawable(R.drawable.yellow_selector));
                 break;
             case R.id.blue_button:
-                animateColorChangeForButton(mBlueButton, getResources().getColor(R.color.colorBlue), getResources().getColor(R.color.colorBlueFlash));
+                animateColorChangeForButton(mBlueButton, ContextCompat.getColor(this, R.color.colorBlue), getResources().getColor(R.color.colorBlueFlash));
+                Log.d("TAG", "Blue button animated");
+                mBlueButton.setBackground(getDrawable(R.drawable.blue_selector));
                 break;
             default:
                 break;
