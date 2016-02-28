@@ -95,9 +95,7 @@ public class MainFragment extends Fragment {
             incrementIndex();
         }
         else {
-            model.createNewList();
-            mCurrentIndex = 0;
-            mCurrentScore = 0;
+            createNewList();
             Toast.makeText(getActivity(), R.string.fail_toast, Toast.LENGTH_SHORT).show();
         }
     }
@@ -153,8 +151,7 @@ public class MainFragment extends Fragment {
                     }
                 }, i * 1000);
             }
-            isRunning = false;
-            Log.d("TAG", "IsRunning is: " +isRunning);
+            stopSequence();
         }
     }
 
@@ -164,6 +161,8 @@ public class MainFragment extends Fragment {
             isRunning = false;
             mHandler = null;
         }
+        Log.d("TAG", "stopSequence called");
+        Log.d("TAG", "IsRunning is: " +isRunning);
     }
 
     private Runnable runnable = new Runnable() {

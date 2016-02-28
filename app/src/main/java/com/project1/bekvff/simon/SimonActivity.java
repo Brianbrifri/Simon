@@ -33,26 +33,15 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     private TextView mCurrentScoreView;
     private TextView mHighScoreView;
 
-    private int mCurrentScore;
-    private int mHighScore ;
-    private int mCurrentIndex;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simon);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        //Set member variables to 0
-        mHighScore = 0;
-        mCurrentScore = 0;
-        mCurrentIndex = 0;
 
         //This is where I set the member variables if the activity has been destroyed
         //Also set the views and updated the view
         if (savedInstanceState != null) {
-            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
-            mHighScore = savedInstanceState.getInt(KEY_HIGH, 0);
-            mCurrentScore = savedInstanceState.getInt(KEY_CURRENT, 0);
             mCurrentScoreView = (TextView) findViewById(R.id.current_score_view);
             mHighScoreView = (TextView) findViewById(R.id.high_score_view);
             updateScoreView();
@@ -64,6 +53,8 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
         mYellowButton = (Button) findViewById(R.id.yellow_button);
         mBlueButton = (Button) findViewById(R.id.blue_button);
         mStartButton = (Button) findViewById(R.id.start_button);
+
+        disableButtons();
 
         //Set button background colors. Will be relegated to drawables shortly
 
@@ -94,9 +85,6 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(KEY_INDEX, mCurrentIndex);
-        outState.putInt(KEY_CURRENT, mCurrentScore);
-        outState.putInt(KEY_HIGH, mHighScore);
     }
 
     //This function updates the score view to the TextView of both
@@ -110,6 +98,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     //to see if the background fragment is running, so as not to call the
     //checkButtonPress function if it is; otherwise, call the checkButtonPress function
     public void greenButtonClicked(View v) {
+        enabledCheck();
         if(mMainFragment.fragmentIsRunning()) {
             Log.d("TAG", "Button short circuited");
             return;
@@ -119,6 +108,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     }
 
     public void redButtonClicked(View v) {
+        enabledCheck();
         if(mMainFragment.fragmentIsRunning()) {
             Log.d("TAG", "Button short circuited");
             return;
@@ -128,6 +118,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     }
 
     public void yellowButtonClicked(View v) {
+        enabledCheck();
         if(mMainFragment.fragmentIsRunning()) {
             Log.d("TAG", "Button short circuited");
             return;
@@ -137,6 +128,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     }
 
     public void blueButtonClicked(View v) {
+        enabledCheck();
         if(mMainFragment.fragmentIsRunning()) {
             Log.d("TAG", "Button short circuited");
             return;
@@ -148,13 +140,34 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     //This function will be called when the Start button is clicked
     //and will reset the Array list and current score
     public void startResetClicked(View v) {
-        mMainFragment.createNewList();
+        enableButtons();
         updateScoreView();
+        mMainFragment.startSequence();
+    }
+
+    private void enabledCheck() {
+        if(!mGreenButton.isEnabled()) {
+            Toast.makeText(this, R.string.press_start_toast, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void enableButtons() {
+        mGreenButton.setEnabled(true);
+        mRedButton.setEnabled(true);
+        mYellowButton.setEnabled(true);
+        mBlueButton.setEnabled(true);
+    }
+
+    public void disableButtons() {
+        mGreenButton.setEnabled(false);
+        mRedButton.setEnabled(false);
+        mYellowButton.setEnabled(false);
+        mBlueButton.setEnabled(false);
     }
 
     private void animateColorChangeForButton(final Button button, int colorFrom, int colorTo) {
         ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-        colorAnimation.setDuration(500);
+        colorAnimation.setDuration(250);
         colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -162,7 +175,6 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
             }
         });
         colorAnimation.start();
-        colorAnimation.reverse();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -172,21 +184,25 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
         switch(textResId) {
             case R.id.green_button:
                 animateColorChangeForButton(mGreenButton, ContextCompat.getColor(this, R.color.colorGreen), getResources().getColor(R.color.colorGreenFlash));
+                animateColorChangeForButton(mGreenButton, ContextCompat.getColor(this, R.color.colorGreenFlash), getResources().getColor(R.color.colorGreen));
                 Log.d("TAG", "Green button animated");
                 mGreenButton.setBackground(getDrawable(R.drawable.green_selector));
                 break;
             case R.id.red_button:
                 animateColorChangeForButton(mRedButton, ContextCompat.getColor(this, R.color.colorRed), getResources().getColor(R.color.colorRedFlash));
+                animateColorChangeForButton(mRedButton, ContextCompat.getColor(this, R.color.colorRedFlash), getResources().getColor(R.color.colorRed));
                 Log.d("TAG", "Red button animated");
                 mRedButton.setBackground(getDrawable(R.drawable.red_selector));
                 break;
             case R.id.yellow_button:
                 animateColorChangeForButton(mYellowButton, ContextCompat.getColor(this, R.color.colorYellow), getResources().getColor(R.color.colorYellowFlash));
+                animateColorChangeForButton(mYellowButton, ContextCompat.getColor(this, R.color.colorYellowFlash), getResources().getColor(R.color.colorYellow));
                 Log.d("TAG", "Yellow button animated");
                 mYellowButton.setBackground(getDrawable(R.drawable.yellow_selector));
                 break;
             case R.id.blue_button:
                 animateColorChangeForButton(mBlueButton, ContextCompat.getColor(this, R.color.colorBlue), getResources().getColor(R.color.colorBlueFlash));
+                animateColorChangeForButton(mBlueButton, ContextCompat.getColor(this, R.color.colorBlueFlash), getResources().getColor(R.color.colorBlue));
                 Log.d("TAG", "Blue button animated");
                 mBlueButton.setBackground(getDrawable(R.drawable.blue_selector));
                 break;
