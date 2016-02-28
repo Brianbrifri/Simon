@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 
 /**
@@ -12,12 +14,16 @@ import android.util.Log;
  */
 public class MainFragment extends Fragment {
 
+    private SimonModel model;
     private MainFragmentListener mListener;
     private android.os.Handler mHandler;
     private Boolean isRunning = false;
+    private int mCurrentScore;
+    private int mHighScore ;
+    private int mCurrentIndex;
 
     interface MainFragmentListener {
-        void listenerMethod();
+        void listenerMethod(int textResId);
     }
 
     //This function sets the retain instance to true so it will
@@ -32,10 +38,68 @@ public class MainFragment extends Fragment {
             mListener = (MainFragmentListener) activity;
             Log.d("TAG", "Activity is a listener");
         }
+        model = new SimonModel();
+    }
+
+    public int getCurrentScore() {
+        return mCurrentScore;
+    }
+
+    public int getHighScore() {
+        return mHighScore;
+    }
+
+    public int getCurrentIndex() {
+        return mCurrentIndex;
     }
 
     public boolean fragmentIsRunning() {
         return isRunning;
+    }
+
+    public void createNewList() {
+        model.createNewList();
+        mCurrentScore = 0;
+        mCurrentIndex = 0;
+    }
+
+    //This function will increment the current score by one as well as the
+    //high score if the current score is greater
+    private void increaseScores() {
+        mCurrentScore++;
+        if(mCurrentScore > mHighScore) {
+            mHighScore = mCurrentScore;
+        }
+    }
+
+    //This function increments the index by 1. If it reaches the end of the array list,
+    //it sets the index back to 0, increases the score (because you have pressed all
+    //buttons correctly), updates the score view, and adds a new button to the sequence
+    private void incrementIndex() {
+        mCurrentIndex++;
+        if(mCurrentIndex >= model.getListSize()) {
+            mCurrentIndex = 0;
+            increaseScores();
+            model.createNewSequenceButton();
+            startSequence();
+        }
+    }
+
+    //This function is called when a button is clicked. The resId of the button
+    //is passed through and checked against the sequence at the current index.
+    //If it is correct, the index is incremented; otherwise, a new list is created,
+    //index and current score are reset, score view is updated, and a toast is displayed
+    public void checkButtonPress(int resIdOfButtonPressed) {
+        SequenceButton button = model.getSequenceButtonAtIndex(mCurrentIndex);
+        if(resIdOfButtonPressed == button.getTextResId()) {
+            incrementIndex();
+        }
+        else {
+            model.createNewList();
+            mCurrentIndex = 0;
+            mCurrentScore = 0;
+            Toast.makeText(getActivity(), R.string.fail_toast, Toast.LENGTH_SHORT).show();
+        }
     }
 
     //Function to remove callbacks whenever the fragment stops running
@@ -73,10 +137,21 @@ public class MainFragment extends Fragment {
     }
 
     public void startSequence() {
+        int i;
         if (mHandler == null) {
             mHandler = new Handler();
-            mHandler.postDelayed(runnable, 1500);
-            isRunning = true;
+//            mHandler.postDelayed(runnable, 1000);
+            for(i = 0; i < model.getListSize(); i++) {
+                isRunning = true;
+                final int finalI = i;
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mListener.listenerMethod(model.getSequenceButtonAtIndex(finalI).getTextResId());
+                    }
+                }, i * 1000);
+            }
+            isRunning = false;
         }
     }
 
@@ -92,10 +167,9 @@ public class MainFragment extends Fragment {
         @Override
         public void run() {
             if (mListener != null) {
-                mListener.listenerMethod();
+                mListener.listenerMethod(model.getSequenceButtonAtIndex(0).getTextResId());
             }
             Log.d("TAG", "Runnable ran");
-            mHandler.postDelayed(runnable, 1000);
         }
     };
 }

@@ -43,7 +43,7 @@ design -->
             android:layout_height="wrap_content"
             android:padding="24dp"
             android:onClick="greenButtonClicked"
-            android:background="#26ca28"/>
+            android:background="@drawable/green_selector"/>
 
         <Button
             android:id="@+id/red_button"
@@ -51,7 +51,7 @@ design -->
             android:layout_height="wrap_content"
             android:padding="24dp"
             android:onClick="redButtonClicked"
-            android:background="#cb2f2f"/>
+            />
 
     </LinearLayout>
 
@@ -66,7 +66,7 @@ design -->
             android:layout_height="wrap_content"
             android:padding="24dp"
             android:onClick="yellowButtonClicked"
-            android:background="#f0e10c"/>
+            />
 
         <Button
             android:id="@+id/blue_button"
@@ -74,7 +74,7 @@ design -->
             android:layout_height="wrap_content"
             android:padding="24dp"
             android:onClick="blueButtonClicked"
-            android:background="#3158f5"/>
+            />
 
     </LinearLayout>
 

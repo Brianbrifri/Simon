@@ -1,7 +1,5 @@
 package com.project1.bekvff.simon;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.Fragment;
@@ -66,12 +64,12 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
         mStartButton = (Button) findViewById(R.id.start_button);
 
         //Set button background colors. Will be relegated to drawables shortly
-        mGreenButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorGreen));
+   //     mGreenButton.setBackgroundColor(ContextCompat.getColor(this, R.color.colorGreen));
         mRedButton.setBackgroundColor(getResources().getColor(R.color.colorRed));
         mYellowButton.setBackgroundColor(getResources().getColor(R.color.colorYellow));
         mBlueButton.setBackgroundColor(getResources().getColor(R.color.colorBlue));
 
-        model = new SimonModel();
+//        model = new SimonModel();
 
         mCurrentScoreView = (TextView) findViewById(R.id.current_score_view);
         mHighScoreView = (TextView) findViewById(R.id.high_score_view);
@@ -107,8 +105,8 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     //This function updates the score view to the TextView of both
     //current score and high score
     public void updateScoreView() {
-        mCurrentScoreView.setText(String.valueOf(mCurrentScore));
-        mHighScoreView.setText(String.valueOf(mHighScore));
+        mCurrentScoreView.setText(String.valueOf(mMainFragment.getCurrentScore()));
+        mHighScoreView.setText(String.valueOf(mMainFragment.getHighScore()));
     }
 
     //For the 4 color buttons, when they are clicked, it is first checked
@@ -119,7 +117,8 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
             Log.d("TAG", "Button short circuited");
             return;
         }
-        checkButtonPress(R.id.green_button);
+        mMainFragment.checkButtonPress(R.id.green_button);
+        updateScoreView();
     }
 
     public void redButtonClicked(View v) {
@@ -127,7 +126,8 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
             Log.d("TAG", "Button short circuited");
             return;
         }
-        checkButtonPress(R.id.red_button);
+        mMainFragment.checkButtonPress(R.id.red_button);
+        updateScoreView();
     }
 
     public void yellowButtonClicked(View v) {
@@ -135,7 +135,8 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
             Log.d("TAG", "Button short circuited");
             return;
         }
-        checkButtonPress(R.id.yellow_button);
+        mMainFragment.checkButtonPress(R.id.yellow_button);
+        updateScoreView();
     }
 
     public void blueButtonClicked(View v) {
@@ -143,65 +144,18 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
             Log.d("TAG", "Button short circuited");
             return;
         }
-        checkButtonPress(R.id.blue_button);
+        mMainFragment.checkButtonPress(R.id.blue_button);
+        updateScoreView();
     }
 
     //This function will be called when the Start button is clicked
     //and will reset the Array list and current score
     public void startResetClicked(View v) {
-        if(mMainFragment.fragmentIsRunning()) {
-            mMainFragment.stopSequence();
-        }
-        else {
-            model.createNewList();
-            mCurrentScore = 0;
-            updateScoreView();
-        }
+        mMainFragment.createNewList();
+        updateScoreView();
     }
 
-    //This function will increment the current score by one as well as the
-    //high score if the current score is greater
-    private void increaseScores() {
-        mCurrentScore++;
-        if(mCurrentScore > mHighScore) {
-            mHighScore = mCurrentScore;
-        }
-    }
-
-    //This function increments the index by 1. If it reaches the end of the array list,
-    //it sets the index back to 0, increases the score (because you have pressed all
-    //buttons correctly), updates the score view, and adds a new button to the sequence
-    private void incrementIndex() {
-        mCurrentIndex++;
-        if(mCurrentIndex >= model.getListSize()) {
-            mCurrentIndex = 0;
-            increaseScores();
-            updateScoreView();
-            model.createNewSequenceButton();
-            mMainFragment.startSequence();
-        }
-    }
-
-    //This function is called when a button is clicked. The resId of the button
-    //is passed through and checked against the sequence at the current index.
-    //If it is correct, the index is incremented; otherwise, a new list is created,
-    //index and current score are reset, score view is updated, and a toast is displayed
-    public void checkButtonPress(int resIdOfButtonPressed) {
-        SequenceButton button = model.getSequenceButtonAtIndex(mCurrentIndex);
-        if(resIdOfButtonPressed == button.getTextResId()) {
-            incrementIndex();
-        }
-        else {
-            model.createNewList();
-            mCurrentIndex = 0;
-            mCurrentScore = 0;
-            updateScoreView();
-            Toast.makeText(this, R.string.fail_toast, Toast.LENGTH_SHORT).show();
-            mMainFragment.startSequence();
-        }
-    }
-
-    private void animateColorChangeForButton(final Button button, int colorFrom, int colorTo, int delay) {
+    private void animateColorChangeForButton(final Button button, int colorFrom, int colorTo) {
         ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
         colorAnimation.setDuration(1000);
         colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -210,35 +164,28 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
                 button.setBackgroundColor((int) animation.getAnimatedValue());
             }
         });
-        colorAnimation.setStartDelay(delay);
         colorAnimation.start();
         colorAnimation.reverse();
     }
 
     @Override
-    public void listenerMethod() {
+    public void listenerMethod(int textResId) {
         Log.d("TAG", "Listener method was called");
-        int delay = 2000;
-        int index;
-        for(index = 0; index < model.getListSize(); index++) {
-            SequenceButton button = model.getSequenceButtonAtIndex(index);
-            switch(button.getTextResId()) {
-                case R.id.green_button:
-                    animateColorChangeForButton(mGreenButton, getResources().getColor(R.color.colorGreen), getResources().getColor(R.color.colorGreenFlash), delay * index);
-                    break;
-                case R.id.red_button:
-                    animateColorChangeForButton(mRedButton, getResources().getColor(R.color.colorRed), getResources().getColor(R.color.colorRedFlash), delay * index);
-                    break;
-                case R.id.yellow_button:
-                    animateColorChangeForButton(mYellowButton, getResources().getColor(R.color.colorYellow), getResources().getColor(R.color.colorYellowFlash), delay * index);
-                    break;
-                case R.id.blue_button:
-                    animateColorChangeForButton(mBlueButton, getResources().getColor(R.color.colorBlue), getResources().getColor(R.color.colorBlueFlash), delay * index);
-                    break;
-                default:
-                    break;
-            }
+        switch(textResId) {
+            case R.id.green_button:
+                animateColorChangeForButton(mGreenButton, getResources().getColor(R.color.colorGreen), getResources().getColor(R.color.colorGreenFlash));
+                break;
+            case R.id.red_button:
+                animateColorChangeForButton(mRedButton, getResources().getColor(R.color.colorRed), getResources().getColor(R.color.colorRedFlash));
+                break;
+            case R.id.yellow_button:
+                animateColorChangeForButton(mYellowButton, getResources().getColor(R.color.colorYellow), getResources().getColor(R.color.colorYellowFlash));
+                break;
+            case R.id.blue_button:
+                animateColorChangeForButton(mBlueButton, getResources().getColor(R.color.colorBlue), getResources().getColor(R.color.colorBlueFlash));
+                break;
+            default:
+                break;
         }
-
     }
 }
