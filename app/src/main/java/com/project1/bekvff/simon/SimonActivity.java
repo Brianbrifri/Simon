@@ -32,7 +32,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simon);
-//        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
         //Wire up buttons and views
@@ -168,26 +168,26 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
         Log.d("TAG", "Listener method was called");
         switch(textResId) {
             case R.id.green_button:
-                animateColorChangeForButton(mGreenButton, ContextCompat.getColor(this, R.color.colorGreen), getResources().getColor(R.color.colorGreenFlash));
-                animateColorChangeForButton(mGreenButton, ContextCompat.getColor(this, R.color.colorGreenFlash), getResources().getColor(R.color.colorGreen));
+                animateColorChangeForButton(mGreenButton, ContextCompat.getColor(this, R.color.colorGreen), ContextCompat.getColor(this, R.color.colorGreenFlash));
+                animateColorChangeForButton(mGreenButton, ContextCompat.getColor(this, R.color.colorGreenFlash), ContextCompat.getColor(this, R.color.colorGreen));
                 Log.d("TAG", "Green button animated");
                 mGreenButton.setBackground(getDrawable(R.drawable.green_selector));
                 break;
             case R.id.red_button:
-                animateColorChangeForButton(mRedButton, ContextCompat.getColor(this, R.color.colorRed), getResources().getColor(R.color.colorRedFlash));
-                animateColorChangeForButton(mRedButton, ContextCompat.getColor(this, R.color.colorRedFlash), getResources().getColor(R.color.colorRed));
+                animateColorChangeForButton(mRedButton, ContextCompat.getColor(this, R.color.colorRed), ContextCompat.getColor(this, R.color.colorRedFlash));
+                animateColorChangeForButton(mRedButton, ContextCompat.getColor(this, R.color.colorRedFlash), ContextCompat.getColor(this, R.color.colorRed));
                 Log.d("TAG", "Red button animated");
                 mRedButton.setBackground(getDrawable(R.drawable.red_selector));
                 break;
             case R.id.yellow_button:
-                animateColorChangeForButton(mYellowButton, ContextCompat.getColor(this, R.color.colorYellow), getResources().getColor(R.color.colorYellowFlash));
-                animateColorChangeForButton(mYellowButton, ContextCompat.getColor(this, R.color.colorYellowFlash), getResources().getColor(R.color.colorYellow));
+                animateColorChangeForButton(mYellowButton, ContextCompat.getColor(this, R.color.colorYellow), ContextCompat.getColor(this, R.color.colorYellowFlash));
+                animateColorChangeForButton(mYellowButton, ContextCompat.getColor(this, R.color.colorYellowFlash), ContextCompat.getColor(this, R.color.colorYellow));
                 Log.d("TAG", "Yellow button animated");
                 mYellowButton.setBackground(getDrawable(R.drawable.yellow_selector));
                 break;
             case R.id.blue_button:
-                animateColorChangeForButton(mBlueButton, ContextCompat.getColor(this, R.color.colorBlue), getResources().getColor(R.color.colorBlueFlash));
-                animateColorChangeForButton(mBlueButton, ContextCompat.getColor(this, R.color.colorBlueFlash), getResources().getColor(R.color.colorBlue));
+                animateColorChangeForButton(mBlueButton, ContextCompat.getColor(this, R.color.colorBlue), ContextCompat.getColor(this, R.color.colorBlueFlash));
+                animateColorChangeForButton(mBlueButton, ContextCompat.getColor(this, R.color.colorBlueFlash), ContextCompat.getColor(this, R.color.colorBlue));
                 Log.d("TAG", "Blue button animated");
                 mBlueButton.setBackground(getDrawable(R.drawable.blue_selector));
                 break;
