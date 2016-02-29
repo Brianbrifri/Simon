@@ -33,6 +33,7 @@ public class SimonModel {
     //first element with a new Sequence Button
     public void createNewList() {
         list = new ArrayList();
+        list.clear();
         createNewSequenceButton();
     }
 

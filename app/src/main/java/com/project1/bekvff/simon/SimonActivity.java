@@ -14,17 +14,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class SimonActivity extends AppCompatActivity implements MainFragment.MainFragmentListener{
 
     //Initialize buttons, model and views
     private static final String MAIN_FRAG_TAG = "MainFragment";
-    private static final String KEY_INDEX = "index";
-    private static final String KEY_CURRENT = "current";
-    private static final String KEY_HIGH = "high";
     private MainFragment mMainFragment;
-    private SimonModel model;
     private Button mGreenButton;
     private Button mRedButton;
     private Button mYellowButton;
@@ -37,30 +32,21 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simon);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        //This is where I set the member variables if the activity has been destroyed
-        //Also set the views and updated the view
-        if (savedInstanceState != null) {
-            mCurrentScoreView = (TextView) findViewById(R.id.current_score_view);
-            mHighScoreView = (TextView) findViewById(R.id.high_score_view);
-            updateScoreView();
-        }
 
-        //Wire up buttons, model and views
+        //Wire up buttons and views
         mGreenButton = (Button) findViewById(R.id.green_button);
         mRedButton = (Button) findViewById(R.id.red_button);
         mYellowButton = (Button) findViewById(R.id.yellow_button);
         mBlueButton = (Button) findViewById(R.id.blue_button);
         mStartButton = (Button) findViewById(R.id.start_button);
-
-        disableButtons();
-
-        //Set button background colors. Will be relegated to drawables shortly
-
-
         mCurrentScoreView = (TextView) findViewById(R.id.current_score_view);
         mHighScoreView = (TextView) findViewById(R.id.high_score_view);
+
+        //Disable buttons on launch of game
+        disableButtons();
+
 
         //Creating the fragment manager and attaching the fragment (found by tag) to the
         //fragment manager. If the mainFragment is not already created, the mainFragment
@@ -77,14 +63,6 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
 
         //Display the initial scores (both are zero at this point)
         updateScoreView();
-//        mMainFragment.startSequence();
-    }
-
-    //This is where the member variables are stored to final strings
-    //if the activity is destroyed
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
     }
 
     //This function updates the score view to the TextView of both
@@ -98,8 +76,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     //to see if the background fragment is running, so as not to call the
     //checkButtonPress function if it is; otherwise, call the checkButtonPress function
     public void greenButtonClicked(View v) {
-        enabledCheck();
-        if(mMainFragment.fragmentIsRunning()) {
+        if(!enabledCheck()) {
             Log.d("TAG", "Button short circuited");
             return;
         }
@@ -108,8 +85,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     }
 
     public void redButtonClicked(View v) {
-        enabledCheck();
-        if(mMainFragment.fragmentIsRunning()) {
+        if(!enabledCheck()) {
             Log.d("TAG", "Button short circuited");
             return;
         }
@@ -118,8 +94,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     }
 
     public void yellowButtonClicked(View v) {
-        enabledCheck();
-        if(mMainFragment.fragmentIsRunning()) {
+        if(!enabledCheck()) {
             Log.d("TAG", "Button short circuited");
             return;
         }
@@ -128,8 +103,7 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     }
 
     public void blueButtonClicked(View v) {
-        enabledCheck();
-        if(mMainFragment.fragmentIsRunning()) {
+        if(!enabledCheck()) {
             Log.d("TAG", "Button short circuited");
             return;
         }
@@ -140,29 +114,40 @@ public class SimonActivity extends AppCompatActivity implements MainFragment.Mai
     //This function will be called when the Start button is clicked
     //and will reset the Array list and current score
     public void startResetClicked(View v) {
+        mMainFragment.createNewList();
         enableButtons();
         updateScoreView();
         mMainFragment.startSequence();
     }
 
-    private void enabledCheck() {
+    private boolean enabledCheck() {
         if(!mGreenButton.isEnabled()) {
-            Toast.makeText(this, R.string.press_start_toast, Toast.LENGTH_SHORT).show();
+            return false;
         }
+        else
+            return true;
     }
 
     public void enableButtons() {
         mGreenButton.setEnabled(true);
+        mGreenButton.setClickable(true);
         mRedButton.setEnabled(true);
+        mRedButton.setClickable(true);
         mYellowButton.setEnabled(true);
+        mYellowButton.setClickable(true);
         mBlueButton.setEnabled(true);
+        mBlueButton.setClickable(true);
     }
 
     public void disableButtons() {
         mGreenButton.setEnabled(false);
+        mGreenButton.setClickable(false);
         mRedButton.setEnabled(false);
+        mRedButton.setClickable(false);
         mYellowButton.setEnabled(false);
+        mYellowButton.setClickable(false);
         mBlueButton.setEnabled(false);
+        mBlueButton.setClickable(false);
     }
 
     private void animateColorChangeForButton(final Button button, int colorFrom, int colorTo) {

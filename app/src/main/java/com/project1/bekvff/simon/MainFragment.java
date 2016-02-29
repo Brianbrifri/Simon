@@ -136,10 +136,10 @@ public class MainFragment extends Fragment {
 
     public void startSequence() {
         int i;
+        int sizeOfModel = model.getListSize();
         if (mHandler == null) {
             mHandler = new Handler();
-//            mHandler.postDelayed(runnable, 1000);
-            for(i = 0; i < model.getListSize(); i++) {
+            for(i = 0; i < sizeOfModel; i++) {
                 Log.d("TAG", "IsRunning is: " +isRunning);
                 isRunning = true;
                 final int finalI = i;
@@ -147,9 +147,9 @@ public class MainFragment extends Fragment {
                     @Override
                     public void run() {
                         mListener.listenerMethod(model.getSequenceButtonAtIndex(finalI).getTextResId());
-                        Log.d("TAG", "FinalI is: " +finalI);
+                        Log.d("TAG", "isRunning is: " +isRunning);
                     }
-                }, i * 1000);
+                }, (i * 1000) + 1000);
             }
             stopSequence();
         }
@@ -157,7 +157,7 @@ public class MainFragment extends Fragment {
 
     public void stopSequence() {
         if (mHandler != null) {
-            mHandler.removeCallbacks(runnable);
+//            mHandler.removeCallbacks(runnable);
             isRunning = false;
             mHandler = null;
         }
